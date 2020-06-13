@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TodoApp</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+<div class="nav">
+<div style="text-align: center;">
+    <h2>
+        Todo Application
+    </h2>
+</div>
+</div>
+{% block content %}
+<br /><br /><br />
+<section>
+    {% if not todos %}
+    <div style="text-align: center;">
+    <pre>
+        <b>You have no Todos</b>
+    </pre>
+    </div>
+</section>
+<section>
+    {% else %}
+    <div style="text-align: center;">
+        <h2>
+            Your Todos
+        </h2>
+    {% for todo in todos %}
+        <form action="{% url 'delete' todo.id %}" method="POST">
+            {% csrf_token %}
+            <li>{{ todo.task }}|
+            {% if todo.is_complete %}
+                Task Completed!
+            {% else %}
+                Task not Completed!
+            {% endif %}
+            </li>
+            <li><input type="submit" value="mark as complete" name="complete"></li>
+            <li><input type="submit" value="Update" name="update"></li>
+            <li><input type="submit" value="delete" name="delete"></li>
+        </form>
+    {% endfor %}
+    </div>
+</section>
+    {% endif %}
+<section>
+    <div style="text-align: center;">
+        <form action="{% url 'index' %}" type="text" method="POST">
+            {{form.as_p}}
+            {% csrf_token %}
+            <input type="text" name="task">
+            <input type="submit" value="submit" name="submit">
+        </form>
+    </div>
+</section>
+{% endblock %}
+</body>
+</html>
